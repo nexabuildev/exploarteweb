@@ -11,10 +11,10 @@
   color: black;
 }
 
-/* 2. Regla manual infalible para Modo Oscuro */
+/* 2. Regla base para Modo Oscuro */
 .dark {
-  background-color: #0a0a0a !important;
-  color: white !important;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 /* 3. Forzamos a que los componentes con clases dark: funcionen */

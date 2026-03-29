@@ -10,4 +10,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️ Configuración de Supabase incompleta. Revisa tus variables de entorno.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Solo creamos el cliente si las variables existen para evitar el crash "supabaseUrl is required"
+export const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
