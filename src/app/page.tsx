@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
 // Categorías completas solicitadas
@@ -15,7 +15,7 @@ const categorias = [
   'Diseño Gráfico'
 ];
 
-// Datos demostrativos para la visualización (adaptados a los nuevos servicios)
+// Datos demostrativos (adaptados a los nuevos servicios)
 const mockProductos = [
   {
     id: 1,
@@ -67,6 +67,14 @@ export default function ExploarteCatalog() {
   const [categoriaActiva, setCategoriaActiva] = useState('Todas');
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+
+  // Efecto para detectar el scroll y comprimir el header
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Lógica combinada de Filtrado + Búsqueda
   let productosFiltrados = mockProductos;
@@ -85,62 +93,66 @@ export default function ExploarteCatalog() {
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-[#D4AF37] selection:text-white">
       
-      {/* HEADER MINIMALISTA */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-6 py-6 md:px-12 flex items-center justify-between transition-all">
+      {/* HEADER DINÁMICO Y RESPONSIVE */}
+      <header className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 lg:px-12 flex items-center justify-between transition-all duration-500 ${scrolled ? 'py-4 shadow-sm' : 'py-6 md:py-8'}`}>
         
-        <div className="w-1/3 flex items-center">
+        {/* IZQUIERDA: BURGER MENU MODERNO */}
+        <div className="w-1/4 sm:w-1/3 flex items-center">
           <button 
             onClick={() => setMenuAbierto(!menuAbierto)}
-            className="group flex gap-2 items-center text-xs tracking-widest uppercase font-medium hover:text-[#D4AF37] transition-colors"
+            className="group flex gap-3 items-center text-[10px] tracking-[0.3em] uppercase font-bold hover:text-[#D4AF37] transition-colors"
           >
-            <span className="w-4 h-px bg-black group-hover:bg-[#D4AF37] transition-all"></span>
-            Menú
+            <div className="flex flex-col gap-1.5 w-5">
+              <span className={`h-[1px] bg-black transition-all group-hover:bg-[#D4AF37] ${menuAbierto ? 'rotate-45 translate-y-[3.5px]' : ''}`}></span>
+              <span className={`h-[1px] bg-black transition-all group-hover:bg-[#D4AF37] ${menuAbierto ? '-rotate-45 -translate-y-[3.5px]' : ''}`}></span>
+            </div>
+            <span className="hidden sm:inline">Menú</span>
           </button>
         </div>
 
-        {/* LOGO CENTRAL */}
-        <div className="w-1/3 text-center">
-          <Link href="/" className="text-2xl md:text-3xl font-light tracking-[0.2em] uppercase origin-center hover:scale-[1.02] transition-transform inline-block group">
-            Explo<span className="text-[#D4AF37] font-medium transition-colors">arte</span>
+        {/* LOGO CENTRAL (FLUIDO) */}
+        <div className="w-2/4 sm:w-1/3 text-center">
+          <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-light tracking-[0.2em] uppercase origin-center hover:scale-[1.02] transition-transform inline-block group">
+            Explo<span className="text-[#D4AF37] font-medium">arte</span>
           </Link>
         </div>
 
-        {/* ESPACIO DERECHO */}
-        <div className="w-1/3 flex justify-end gap-6">
-          <a href="#info" className="text-xs uppercase tracking-widest font-medium hover:text-[#D4AF37] transition-colors hidden sm:block">
+        {/* DERECHA: CONTACTO (SE OCULTA EN MOVIL EXTREMO) */}
+        <div className="w-1/4 sm:w-1/3 flex justify-end gap-4 md:gap-8">
+          <a href="#info" className="text-[10px] uppercase tracking-widest font-bold hover:text-[#D4AF37] transition-colors hidden md:block">
             Info
           </a>
-          <a href="#contacto" className="text-xs uppercase tracking-widest font-medium hover:text-[#D4AF37] transition-colors">
-            Contacto
+          <a href="#contacto" className="text-[10px] sm:text-[10px] uppercase tracking-widest font-bold hover:text-[#D4AF37] transition-colors">
+            {scrolled ? 'Contacto' : 'Solicitar'}
           </a>
         </div>
         
       </header>
 
-      {/* BARRA DE BÚSQUEDA Y FILTRADO */}
-      <div className="bg-[#fafafa] border-b border-gray-100 py-4 px-6 md:px-12">
-        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row gap-6 items-center justify-between">
+      {/* BARRA DE BÚSQUEDA Y FILTRADO (UI POLISHED) */}
+      <div className="bg-[#fafafa] border-b border-gray-100 py-6 px-4 md:px-8 lg:px-12">
+        <div className="max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8 items-center justify-between">
           
-          {/* Input Buscador */}
-          <div className="w-full md:w-1/3 relative">
+          {/* Input Buscador (Más largo en desktop) */}
+          <div className="w-full lg:w-96 relative group">
             <input 
               type="text" 
-              placeholder="BUSCAR (EJ. CAMISETAS, VINILO...)" 
+              placeholder="¿Qué estás buscando?..." 
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full bg-transparent border-b border-gray-300 py-2 text-[10px] md:text-xs tracking-[0.2em] uppercase outline-none focus:border-[#D4AF37] transition-colors"
+              className="w-full bg-transparent border-b border-gray-200 py-3 text-[10px] md:text-xs tracking-[0.2em] uppercase outline-none focus:border-[#D4AF37] transition-all placeholder:text-gray-300"
             />
-            <span className="absolute right-0 top-1/2 -translate-y-1/2 opacity-30 text-xs">🔍</span>
+            <span className="absolute right-0 top-1/2 -translate-y-1/2 opacity-20 group-focus-within:opacity-100 transition-opacity">🔍</span>
           </div>
 
-          {/* Filtros de Categoría Rápidos (Scroll Horizontal en móvil) */}
-          <div className="w-full md:flex-1 flex overflow-x-auto no-scrollbar gap-6 md:justify-end text-[9px] uppercase tracking-[0.2em]">
-            {categorias.slice(0, 6).map(c => (
+          {/* Filtros de Categoría (Scroll elegante) */}
+          <div className="w-full lg:flex-1 flex overflow-x-auto no-scrollbar gap-8 lg:justify-end text-[10px] uppercase tracking-[0.2em] pb-2 md:pb-0">
+            {categorias.map(c => (
               <button 
                 key={c} 
                 onClick={() => setCategoriaActiva(c)} 
-                className={`whitespace-nowrap transition-colors border-b-2 pb-1 ${
-                  categoriaActiva === c ? 'text-[#D4AF37] border-[#D4AF37] font-bold' : 'text-gray-400 border-transparent hover:text-black'
+                className={`whitespace-nowrap transition-all border-b-2 pb-2 ${
+                  categoriaActiva === c ? 'text-[#D4AF37] border-[#D4AF37] font-black' : 'text-gray-400 border-transparent hover:text-black hover:translate-y-[-1px]'
                 }`}
               >
                 {c}
@@ -151,15 +163,22 @@ export default function ExploarteCatalog() {
         </div>
       </div>
 
-      {/* MENÚ DESPLEGABLE COMPLETO */}
+      {/* MENÚ DESPLEGABLE FULLSCREEN EN MÓVIL */}
       <div 
-        className={`fixed top-[81px] md:top-[85px] left-0 w-full bg-[#111] text-white z-40 border-b border-[#D4AF37]/20 overflow-hidden transition-all duration-500 ease-in-out ${
-          menuAbierto ? 'max-h-[500px] py-16 opacity-100' : 'max-h-0 py-0 opacity-0'
+        className={`fixed top-0 left-0 w-full h-[100dvh] bg-black text-white z-[60] flex items-center justify-center transition-all duration-700 ease-in-out ${
+          menuAbierto ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <p className="text-[9px] uppercase tracking-widest text-[#D4AF37] mb-8 ml-2">Todas las Categorías</p>
-          <div className="flex flex-wrap gap-8 md:gap-12">
+        <button 
+          onClick={() => setMenuAbierto(false)}
+          className="absolute top-8 right-8 text-[#D4AF37] text-xs uppercase tracking-[0.4em] hover:text-white transition-colors"
+        >
+          Cerrar ✕
+        </button>
+        
+        <div className="w-full max-w-5xl mx-auto px-8 py-20 overflow-y-auto max-h-full">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37] mb-12 text-center opacity-60">Servicios Disponibles</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 text-center md:text-left">
             {categorias.map(cat => (
               <button 
                 key={cat}
@@ -167,28 +186,31 @@ export default function ExploarteCatalog() {
                   setCategoriaActiva(cat);
                   setMenuAbierto(false);
                 }}
-                className={`text-2xl md:text-4xl font-light tracking-tight transition-all hover:translate-x-2 ${
-                  categoriaActiva === cat ? 'text-[#D4AF37] opacity-100' : 'opacity-50 hover:opacity-100 hover:text-white'
+                className={`text-3xl sm:text-5xl lg:text-7xl font-light tracking-tighter transition-all hover:text-[#D4AF37] transform hover:translate-x-4 inline-block ${
+                  categoriaActiva === cat ? 'text-[#D4AF37] font-normal' : 'text-zinc-800'
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
+          
+          <div className="mt-20 flex flex-col md:flex-row items-center justify-center gap-12 border-t border-zinc-900 pt-12">
+             <a href="#info" onClick={() => setMenuAbierto(false)} className="text-xs uppercase tracking-widest hover:text-[#D4AF37] transition-colors">Info</a>
+             <a href="#contacto" onClick={() => setMenuAbierto(false)} className="text-xs uppercase tracking-widest hover:text-[#D4AF37] transition-colors">Contacto</a>
+             <a href="tel:+34641183574" className="text-[#D4AF37] font-bold text-xs uppercase tracking-widest">+34 641 183 574</a>
+          </div>
         </div>
       </div>
 
-      {/* OVERLAY DEL MENU */}
-      {menuAbierto && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30" onClick={() => setMenuAbierto(false)} />}
-
-      {/* GRID DE PRODUCTOS / SERVICIOS */}
-      <main className="max-w-[1600px] mx-auto px-4 md:px-8 py-16 md:py-24 min-h-[50vh]">
+      {/* GRID DE PRODUCTOS (ULTRA-WIDE OPTIMIZED) */}
+      <main className="max-w-[2200px] mx-auto px-4 sm:px-8 md:px-12 py-16 md:py-24 lg:py-32 min-h-[60vh]">
         {productosFiltrados.length === 0 ? (
-          <div className="text-center text-gray-400 py-32 tracking-[0.2em] text-xs uppercase">
-            No hay resultados para "{busqueda}" en {categoriaActiva}
+          <div className="text-center text-gray-300 py-32 tracking-[0.4em] text-[10px] uppercase">
+             ( Sin resultados )
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-16 md:gap-x-8 md:gap-y-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-20 md:gap-x-10 md:gap-y-32">
             {productosFiltrados.map((prod) => (
               <ProductCard key={prod.id} producto={prod} />
             ))}
@@ -196,165 +218,118 @@ export default function ExploarteCatalog() {
         )}
       </main>
 
-      {/* SECCIÓN INFO / ACERCA DEL DISEÑADOR */}
-      <section id="info" className="bg-[#050505] text-white py-24 md:py-32 border-t border-[#D4AF37]/30">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+      {/* SECCIÓN INFO (FLUIDA) */}
+      <section id="info" className="bg-[#050505] text-white py-24 sm:py-32 lg:py-48 border-t border-[#D4AF37]/20">
+        <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-20">
           
-          <div className="mb-16">
-            <p className="text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-medium mb-4">Dirección Creativa</p>
-            <h2 className="text-4xl md:text-6xl font-light tracking-[0.1em] uppercase mb-2 leading-tight">
-              Andrés <span className="text-[#D4AF37] font-medium">Castaño</span>
+          <div className="mb-24 md:mb-32">
+            <p className="text-[#D4AF37] text-[10px] uppercase tracking-[0.4em] font-medium mb-6 opacity-80">Dirección Creativa</p>
+            <h2 className="text-5xl sm:text-7xl lg:text-9xl font-extralight tracking-tight uppercase mb-4 leading-[0.9] text-zinc-100">
+               Catálogo <span className="text-[#D4AF37] font-medium">Completo</span>
             </h2>
-            <p className="text-sm tracking-widest uppercase text-gray-400">
-              Diseñador Gráfico en General
+            <p className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 mt-8">
+              Andrés Castaño | Servicios Gráficos Premium
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 text-sm font-light tracking-wide text-gray-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-24">
             
-            {/* GRUPO 1 */}
-            <div className="space-y-12">
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Papelería</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Flyers</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Tarjetas de visita</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Factura membretada</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Impresión Digital</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Gran Formato</li>
-                </ul>
-              </div>
+            {/* SERVICIOS 1 */}
+            <div className="group">
+              <h4 className="text-[#D4AF37] uppercase tracking-[0.4em] text-[10px] font-black mb-8 border-b border-zinc-800 pb-4">Técnicas Clásicas</h4>
+              <ul className="space-y-4 text-xs tracking-[0.2em] font-light text-zinc-400">
+                {['Sublimación Especializada', 'Serigrafía Textil', 'Impresión Digital Gran Formato', 'Papelería Corporativa'].map(item => (
+                  <li key={item} className="flex gap-4 items-center group-hover:text-white transition-colors">
+                    <span className="w-6 h-[0.5px] bg-[#D4AF37] opacity-40"></span>{item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* GRUPO 2 */}
-            <div className="space-y-12">
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Sublimación</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Camisetas</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Tazas</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Gorras</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Llaveros</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Artículos de souvenir</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Serigrafía</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Bolsas estampadas</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Camisetas</li>
-                </ul>
-              </div>
+            {/* SERVICIOS 2 */}
+            <div className="group">
+              <h4 className="text-[#D4AF37] uppercase tracking-[0.4em] text-[10px] font-black mb-8 border-b border-zinc-800 pb-4">Rotulación Profesional</h4>
+              <ul className="space-y-4 text-xs tracking-[0.2em] font-light text-zinc-400">
+                {['Flotas de Vehículos', 'Escaparates de Lujo', 'Interiores y Murales', 'Sistemas de Señalética'].map(item => (
+                  <li key={item} className="flex gap-4 items-center group-hover:text-white transition-colors">
+                    <span className="w-6 h-[0.5px] bg-[#D4AF37] opacity-40"></span>{item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* GRUPO 3 */}
-            <div className="space-y-12">
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Rotulación</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Furgonetas</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Escaparates</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Cristales</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Coches</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Autobuses</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-[#D4AF37] uppercase tracking-[0.2em] text-[10px] font-bold mb-4 border-b border-dashed border-gray-800 pb-3">Estampados</h4>
-                <ul className="space-y-3">
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>DTF</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Vinilo textil</li>
-                  <li className="flex gap-4 items-center group"><span className="w-4 h-px bg-[#D4AF37] group-hover:w-6 transition-all"></span>Serigrafía</li>
-                </ul>
-              </div>
+            {/* SERVICIOS 3 */}
+            <div className="group">
+              <h4 className="text-[#D4AF37] uppercase tracking-[0.4em] text-[10px] font-black mb-8 border-b border-zinc-800 pb-4">Nuevas Tecnologías</h4>
+              <ul className="space-y-4 text-xs tracking-[0.2em] font-light text-zinc-400">
+                {['Impresión DTF Directa', 'Vinilo de Corte Premium', 'Diseño Identidad Visual', 'Branding Estratégico'].map(item => (
+                  <li key={item} className="flex gap-4 items-center group-hover:text-white transition-colors">
+                    <span className="w-6 h-[0.5px] bg-[#D4AF37] opacity-40"></span>{item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* SECCIÓN CONTACTO */}
-      <section id="contacto" className="max-w-3xl mx-auto px-6 md:px-12 py-24 my-12">
-        <div className="text-center mb-16">
-          <p className="text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-medium mb-2">Solicita Presupuesto</p>
-          <h2 className="text-3xl md:text-4xl font-light tracking-[0.2em] uppercase mb-4">Contact</h2>
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest">Ponte en contacto para solicitar cualquier tipo de encargo.</p>
+      {/* SECCIÓN CONTACTO (OPTIMIZADA) */}
+      <section id="contacto" className="max-w-4xl mx-auto px-6 sm:px-12 py-32 md:py-48 my-12">
+        <div className="text-center mb-24">
+          <p className="text-[#D4AF37] text-[10px] uppercase tracking-[0.4em] font-bold mb-4">Presupuestos a medida</p>
+          <h2 className="text-4xl sm:text-6xl md:text-7xl font-extralight tracking-tighter uppercase mb-6 text-zinc-900 leading-none">
+             Let's <span className="font-bold underline decoration-[#D4AF37]/30 decoration-8 underline-offset-8">Talk</span>
+          </h2>
           
-          {/* DATOS DE CONTACTO DIRECTO */}
-          <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-6 text-xs md:text-sm font-bold tracking-widest text-gray-800">
-            <a href="tel:+34641183574" className="flex items-center gap-2 hover:text-[#D4AF37] transition-colors">
-              <span className="text-lg">📱</span> +34 641 18 35 74
-            </a>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <a href="mailto:exploarte.esp@gmail.com" className="flex items-center gap-2 hover:text-[#D4AF37] transition-colors hover:uppercase">
-              <span className="text-lg">✉️</span> exploarte.esp@gmail.com
-            </a>
+          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-10 text-[10px] md:text-xs font-black tracking-[0.3em] text-zinc-900 border-y border-zinc-100 py-10">
+            <a href="tel:+34641183574" className="hover:text-[#D4AF37] transition-all transform hover:scale-105">PHONE: +34 641 18 35 74</a>
+            <a href="mailto:exploarte.esp@gmail.com" className="hover:text-[#D4AF37] transition-all transform hover:scale-105">EMAIL: EXPLOARTE.ESP@GMAIL.COM</a>
           </div>
         </div>
 
-        <form action="https://api.web3forms.com/submit" method="POST" className="flex flex-col gap-10">
-          <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
-          <input type="hidden" name="subject" value="Nuevo mensaje (Presupuesto/Consulta) desde Exploarte" />
+        <form action="https://api.web3forms.com/submit" method="POST" className="flex flex-col gap-12">
+          <input type="hidden" name="access_key" value={process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "YOUR_ACCESS_KEY_HERE"} />
+          <input type="hidden" name="subject" value="Solicitud de Proyecto - Exploarte" />
+          <input type="hidden" name="from_name" value="Exploarte Web" />
 
-          <div className="flex flex-col md:flex-row gap-10">
-            <div className="flex-1">
-              <input type="text" name="name" required placeholder="Tu Nombre" className="w-full bg-transparent border-b border-gray-300 py-4 text-sm font-light tracking-wide outline-none focus:border-[#D4AF37] transition-colors" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="group relative">
+              <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">NOMBRE COMPLETO</label>
+              <input type="text" name="name" required placeholder="TU NOMBRE" className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300" />
             </div>
-            <div className="flex-1">
-              <input type="email" name="email" required placeholder="Tu Email" className="w-full bg-transparent border-b border-gray-300 py-4 text-sm font-light tracking-wide outline-none focus:border-[#D4AF37] transition-colors" />
+            <div className="group relative">
+              <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">CORREO ELECTRÓNICO</label>
+              <input type="email" name="email" required placeholder="TU EMAIL" className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300" />
             </div>
           </div>
           
-          <div>
-            <textarea name="message" required placeholder="Dime qué necesitas (ej. Vinilo para furgoneta, Pack de 20 camisetas...)" rows={4} className="w-full bg-transparent border-b border-gray-300 py-4 text-sm font-light tracking-wide outline-none focus:border-[#D4AF37] transition-colors resize-none"></textarea>
+          <div className="group relative">
+             <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">DETALLES DEL PROYECTO</label>
+             <textarea name="message" required placeholder="EXPLÍCAME TU PROYECTO..." rows={4} className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300 resize-none"></textarea>
           </div>
 
-          <button type="submit" className="mt-4 bg-black text-[#D4AF37] w-full py-5 text-xs uppercase tracking-[0.3em] font-medium hover:bg-[#D4AF37] hover:text-black transition-colors shadow-2xl">
-            Enviar Mensaje
+          <button type="submit" className="mt-12 group relative overflow-hidden bg-black text-[#D4AF37] py-6 sm:py-8 text-xs uppercase tracking-[0.5em] font-black transition-all hover:bg-zinc-900 border border-black hover:border-[#D4AF37]/50">
+             <span className="relative z-10">Enviar Propuesta</span>
+             <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-10"></div>
           </button>
         </form>
       </section>
 
-      {/* FOOTER MINIMALISTA */}
-      <footer className="border-t border-[#D4AF37]/20 py-16 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8 bg-[#050505] text-white">
-        <div className="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-500">
-          © {new Date().getFullYear()} Exploarte
+      {/* FOOTER (CLEAN) */}
+      <footer className="bg-black text-white py-12 px-6 sm:px-12 flex flex-col md:flex-row items-center justify-between gap-10 border-t border-zinc-900">
+        <div className="text-[9px] uppercase tracking-[0.4em] font-medium text-zinc-600">
+          © {new Date().getFullYear()} Exploarte Digital Catalog
         </div>
         
-        {/* ICONOS RRSS Dorados */}
-        <div className="flex items-center gap-8 text-[#D4AF37]">
-          {/* Instagram */}
-          <a href="#" className="hover:text-white transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-          </a>
-          {/* Twitter (X) */}
-          <a href="#" className="hover:text-white transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-              <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
-              <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
-            </svg>
-          </a>
-          {/* TikTok */}
-          <a href="#" className="hover:text-white transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-              <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a5 5 0 0 0 -5 -5 5 5 0 0 0 -1 2v9a6 6 0 1 1 -6 -6c1 0 2 1 3 2"></path>
-            </svg>
-          </a>
+        <div className="flex items-center gap-10">
+          {['Instagram', 'Twitter', 'TikTok'].map(sm => (
+            <a key={sm} href="#" className="text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-white transition-all transform hover:-translate-y-1">{sm}</a>
+          ))}
         </div>
         
-        <div className="text-[10px] uppercase tracking-[0.3em] font-medium text-gray-500">
-          Andrés Castaño
+        <div className="text-[9px] uppercase tracking-[0.4em] font-medium text-zinc-400">
+          By Andrés Castaño
         </div>
       </footer>
 
@@ -362,7 +337,7 @@ export default function ExploarteCatalog() {
   );
 }
 
-// COMPONENTE TARJETA DE PRODUCTO
+// COMPONENTE TARJETA DE PRODUCTO (POLISHED)
 function ProductCard({ producto }: { producto: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasVideo] = useState(!!producto.video_url);
@@ -386,18 +361,19 @@ function ProductCard({ producto }: { producto: any }) {
       onMouseLeave={handleMouseLeave}
     >
       {/* Contenedor Multimedia */}
-      <div className="relative aspect-[3/4] md:aspect-[4/5] bg-gray-50 overflow-hidden mb-6 border border-transparent group-hover:border-[#D4AF37]/30 transition-colors">
+      <div className="relative aspect-[4/5] bg-zinc-50 overflow-hidden mb-8 transform transition-all duration-[2s] group-hover:shadow-[0_45px_100px_-20px_rgba(212,175,55,0.15)]">
         
-        {/* Imagen de Fondo (Escala sutil en hover) */}
+        {/* Imagen de Fondo */}
         <img 
           src={producto.imagen_url} 
           alt={producto.nombre}
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out ${
-            hasVideo ? 'group-hover:opacity-0' : 'group-hover:scale-110'
+          loading="lazy"
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-[2s] ease-out ${
+            hasVideo ? 'group-hover:opacity-0 group-hover:scale-105' : 'group-hover:scale-110'
           }`}
         />
 
-        {/* Video Superpuesto (Si existe, aparece en hover) */}
+        {/* Video Superpuesto */}
         {hasVideo && (
           <video
             ref={videoRef}
@@ -405,18 +381,26 @@ function ProductCard({ producto }: { producto: any }) {
             loop
             muted
             playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out"
+            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-1000 ease-out"
           />
         )}
+        
+        {/* Badge Categoria (Sutil) */}
+        <div className="absolute top-4 left-4 text-[7px] uppercase tracking-[0.3em] font-black bg-white/10 backdrop-blur-sm text-black px-2 py-1 opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100">
+           {producto.categoria}
+        </div>
       </div>
 
       {/* Info Producto */}
-      <div className="flex justify-between items-start px-1 group-hover:text-[#D4AF37] transition-colors">
-        <div>
-          <h3 className="text-sm font-medium tracking-wide uppercase">{producto.nombre}</h3>
-          <p className="text-[10px] text-gray-400 tracking-widest uppercase mt-1 group-hover:text-[#D4AF37]/70 transition-colors">{producto.categoria}</p>
+      <div className="flex justify-between items-start pt-2 border-t border-transparent group-hover:border-zinc-100 transition-all duration-700">
+        <div className="flex-1">
+          <h3 className="text-xs font-bold tracking-[0.15em] uppercase text-zinc-900 group-hover:text-[#D4AF37] transition-colors duration-500">{producto.nombre}</h3>
+          <p className="text-[9px] text-zinc-400 tracking-[0.2em] uppercase mt-2 group-hover:text-zinc-600 transition-colors duration-500">{producto.categoria}</p>
         </div>
-        <p className="text-sm font-light tracking-widest">{producto.precio}€</p>
+        <div className="text-right">
+           <p className="text-xs font-black tracking-widest text-zinc-900 opacity-10 group-hover:opacity-100 transition-opacity duration-1000">DETAIL</p>
+           <p className="text-[10px] font-light tracking-tighter text-zinc-400 mt-1">{producto.precio}€</p>
+        </div>
       </div>
     </div>
   );
