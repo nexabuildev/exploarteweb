@@ -18,6 +18,7 @@ export default function FormularioRegistro() {
   const enviarRegistro = async () => {
     setCargando(true);
     try {
+      if (!supabase) throw new Error('Supabase no está configurado');
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Debes estar logueado');
 

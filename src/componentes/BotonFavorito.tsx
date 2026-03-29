@@ -9,7 +9,7 @@ export default function BotonFavorito({ productoId, usuarioId }: { productoId: s
 
   useEffect(() => {
     async function comprobarEstado() {
-      if (!usuarioId) { setCargando(false); return; }
+      if (!supabase || !usuarioId) { setCargando(false); return; }
       const { data } = await supabase
         .from('favoritos')
         .select('id')
@@ -25,7 +25,7 @@ export default function BotonFavorito({ productoId, usuarioId }: { productoId: s
 
   const toggleFavorito = async (e: React.MouseEvent) => {
     e.preventDefault(); // Evita que al hacer clic se abra el producto
-    if (!usuarioId) return alert("Inicia sesión para guardar favoritos ❤️");
+    if (!supabase || !usuarioId) return alert("Inicia sesión para guardar favoritos ❤️");
 
     if (esFavorito) {
       // Quitar de favoritos
