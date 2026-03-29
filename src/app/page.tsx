@@ -149,7 +149,7 @@ export default function ExploarteCatalog() {
               placeholder="¿Qué estás buscando?..." 
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="w-full bg-transparent border-b border-gray-200 py-3 text-[10px] md:text-xs tracking-[0.2em] uppercase outline-none focus:border-[#D4AF37] transition-all placeholder:text-gray-300"
+              className="w-full bg-transparent border-b border-gray-300 py-3 text-[10px] md:text-xs tracking-[0.2em] uppercase outline-none focus:border-[#D4AF37] transition-all placeholder:text-gray-500"
             />
             <span className="absolute right-0 top-1/2 -translate-y-1/2 opacity-20 group-focus-within:opacity-100 transition-opacity">🔍</span>
           </div>
@@ -236,7 +236,7 @@ export default function ExploarteCatalog() {
             <h2 className="text-5xl sm:text-7xl lg:text-9xl font-extralight tracking-tight uppercase mb-4 leading-[0.9] text-zinc-100">
                Catálogo <span className="text-[#D4AF37] font-medium">Completo</span>
             </h2>
-            <p className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-500 mt-8">
+            <p className="text-xs sm:text-sm tracking-[0.3em] uppercase text-zinc-300 mt-8">
               Andrés Castaño | Servicios Gráficos Premium
             </p>
           </div>
@@ -246,7 +246,7 @@ export default function ExploarteCatalog() {
             {/* SERVICIOS 1 */}
             <div className="group">
               <h4 className="text-[#D4AF37] uppercase tracking-[0.4em] text-[10px] font-black mb-8 border-b border-zinc-800 pb-4">Técnicas Clásicas</h4>
-              <ul className="space-y-4 text-xs tracking-[0.2em] font-light text-zinc-400">
+              <ul className="space-y-4 text-xs tracking-[0.2em] font-light text-zinc-200">
                 {['Sublimación Especializada', 'Serigrafía Textil', 'Impresión Digital Gran Formato', 'Papelería Corporativa'].map(item => (
                   <li key={item} className="flex gap-4 items-center group-hover:text-white transition-colors">
                     <span className="w-6 h-[0.5px] bg-[#D4AF37] opacity-40"></span>{item}
@@ -291,7 +291,7 @@ export default function ExploarteCatalog() {
              Let's <span className="font-bold underline decoration-[#D4AF37]/30 decoration-8 underline-offset-8">Talk</span>
           </h2>
           
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-10 text-[10px] md:text-xs font-black tracking-[0.3em] text-zinc-900 border-y border-zinc-100 py-10">
+          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-10 text-[10px] md:text-xs font-black tracking-[0.3em] text-zinc-900 border-y border-zinc-200 py-10">
             <a href="tel:+34641183574" className="hover:text-[#D4AF37] transition-all transform hover:scale-105">PHONE: +34 641 18 35 74</a>
             <a href="mailto:exploarte.esp@gmail.com" className="hover:text-[#D4AF37] transition-all transform hover:scale-105">EMAIL: EXPLOARTE.ESP@GMAIL.COM</a>
           </div>
@@ -305,17 +305,17 @@ export default function ExploarteCatalog() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="group relative">
               <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">NOMBRE COMPLETO</label>
-              <input type="text" name="name" required placeholder="TU NOMBRE" className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300" />
+              <input type="text" name="name" required placeholder="TU NOMBRE" className="w-full bg-transparent border-b border-zinc-400 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-600" />
             </div>
             <div className="group relative">
               <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">CORREO ELECTRÓNICO</label>
-              <input type="email" name="email" required placeholder="TU EMAIL" className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300" />
+              <input type="email" name="email" required placeholder="TU EMAIL" className="w-full bg-transparent border-b border-zinc-400 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-600" />
             </div>
           </div>
           
           <div className="group relative">
              <label className="absolute -top-6 left-0 text-[8px] uppercase tracking-widest text-[#D4AF37] opacity-0 group-focus-within:opacity-100 transition-all font-bold">DETALLES DEL PROYECTO</label>
-             <textarea name="message" required placeholder="EXPLÍCAME TU PROYECTO..." rows={4} className="w-full bg-transparent border-b border-zinc-200 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-300 resize-none"></textarea>
+             <textarea name="message" required placeholder="EXPLÍCAME TU PROYECTO..." rows={4} className="w-full bg-transparent border-b border-zinc-400 py-4 text-xs font-light tracking-[0.2em] outline-none focus:border-[#D4AF37] transition-all placeholder:text-zinc-600 resize-none"></textarea>
           </div>
 
           <button type="submit" className="mt-12 group relative overflow-hidden bg-black text-[#D4AF37] py-6 sm:py-8 text-xs uppercase tracking-[0.5em] font-black transition-all hover:bg-zinc-900 border border-black hover:border-[#D4AF37]/50">
@@ -327,7 +327,7 @@ export default function ExploarteCatalog() {
 
       {/* FOOTER (CLEAN) */}
       <footer className="bg-black text-white py-12 px-6 sm:px-12 flex flex-col md:flex-row items-center justify-between gap-10 border-t border-zinc-900">
-        <div className="text-[9px] uppercase tracking-[0.4em] font-medium text-zinc-600">
+        <div className="text-[9px] uppercase tracking-[0.4em] font-medium text-zinc-400">
           © {new Date().getFullYear()} Exploarte Digital Catalog
         </div>
         
