@@ -110,10 +110,19 @@ export default function ExploarteCatalog() {
           </button>
         </div>
 
-        {/* LOGO CENTRAL (FLUIDO) */}
-        <div className="w-2/4 sm:w-1/3 text-center">
-          <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-light tracking-[0.2em] uppercase origin-center hover:scale-[1.02] transition-transform inline-block group">
-            Explo<span className="text-[#D4AF37] font-medium">arte</span>
+        {/* LOGO CENTRAL (NUEVO LOGO DE MARCA) */}
+        <div className="w-2/4 sm:w-1/3 flex justify-center">
+          <Link href="/" className="origin-center hover:scale-[1.05] transition-transform inline-block group">
+            <img 
+              src="/logo.png" 
+              alt="Exploarte Logo" 
+              className="h-14 sm:h-20 md:h-28 w-auto object-contain drop-shadow-sm" 
+              onError={(e) => {
+                // Fallback en caso de que la imagen no cargue
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.parentElement!.innerHTML = '<span class="text-xl sm:text-2xl font-light tracking-[0.2em] uppercase">Explo<span class="text-[#D4AF37] font-medium">arte</span></span>';
+              }}
+            />
           </Link>
         </div>
 
